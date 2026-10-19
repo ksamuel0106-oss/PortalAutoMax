@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal de gestión de vehículos nuevos de la agencia AutoMax.">
+    <title>AutoMax | Agencia de Vehículos</title>
+    <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- ===================== ENCABEZADO Y MENÚ ===================== -->
+    <header class="encabezado">
+        <div class="contenedor encabezado__contenido">
+            <a href="#inicio" class="marca">
+                <img src="img/logo.svg" alt="Logo de AutoMax" class="marca__logo">
+                <span class="marca__texto">
+                    <span class="marca__nombre">AutoMax</span>
+                    <span class="marca__lema">Agencia de Vehículos</span>
+                </span>
+            </a>
+
+            <nav class="menu" aria-label="Menú principal">
+                <ul class="menu__lista">
+                    <li><a href="#inicio" class="menu__enlace">Inicio</a></li>
+                    <li><a href="#registro" class="menu__enlace">Registrar</a></li>
+                    <li><a href="#inventario" class="menu__enlace">Inventario</a></li>
+                    <li><a href="#contacto" class="menu__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ===================== PORTADA ===================== -->
+        <section id="inicio" class="portada">
+            <div class="contenedor portada__contenido">
+                <div class="portada__texto">
+                    <p class="portada__etiqueta">Portal de gestión</p>
+                    <h1>Vehículos nuevos AutoMax</h1>
+                    <p>Registre, consulte, actualice y elimine los vehículos disponibles para la venta.
+                       La información se almacena de forma permanente en una base de datos PostgreSQL.</p>
+                    <div class="portada__acciones">
+                        <a href="#registro" class="boton boton--primario">Registrar vehículo</a>
+                        <a href="#inventario" class="boton boton--claro">Ver inventario</a>
+                    </div>
+                </div>
+                <img src="img/logo.svg" alt="" class="portada__imagen">
+            </div>
+        </section>
+
+        <!-- ===================== RESUMEN ===================== -->
+        <section class="contenedor resumen" aria-label="Resumen del inventario">
+            <div class="resumen__tarjeta">
+                <span class="resumen__valor" id="totalModelos">0</span>
+                <span class="resumen__titulo">Vehículos registrados</span>
+            </div>
+            <div class="resumen__tarjeta">
+                <span class="resumen__valor" id="totalUnidades">0</span>
+                <span class="resumen__titulo">Unidades disponibles</span>
+            </div>
+            <div class="resumen__tarjeta">
+                <span class="resumen__valor" id="valorInventario">RD$0.00</span>
+                <span class="resumen__titulo">Valor del inventario</span>
+            </div>
+        </section>
+
+        <!-- ===================== FORMULARIO DE REGISTRO ===================== -->
+        <section id="registro" class="contenedor seccion">
+            <div class="tarjeta">
+                <div class="tarjeta__encabezado">
+                    <h2 id="tituloFormulario">Registrar vehículo</h2>
+                    <p class="tarjeta__nota">Todos los campos son obligatorios.</p>
+                </div>
+
+                <form id="formVehiculo" class="formulario" novalidate>
+                    <div class="campo">
+                        <label for="codigo">Código del vehículo</label>
+                        <input type="text" id="codigo" name="codigo" maxlength="15"
+                               placeholder="Ej: VH-001" autocomplete="off" required>
+                        <small class="campo__error" id="error-codigo"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="marca">Marca</label>
+                        <input type="text" id="marca" name="marca" maxlength="40"
+                               placeholder="Ej: Toyota" required>
+                        <small class="campo__error" id="error-marca"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="modelo">Modelo</label>
+                        <input type="text" id="modelo" name="modelo" maxlength="40"
+                               placeholder="Ej: Corolla" required>
+                        <small class="campo__error" id="error-modelo"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="anio">Año</label>
+                        <input type="number" id="anio" name="anio" step="1"
+                               placeholder="Ej: 2026" required>
+                        <small class="campo__error" id="error-anio"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="color">Color</label>
+                        <input type="text" id="color" name="color" maxlength="30"
+                               placeholder="Ej: Blanco perla" required>
+                        <small class="campo__error" id="error-color"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="combustible">Tipo de combustible</label>
+                        <select id="combustible" name="combustible" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Diésel">Diésel</option>
+                            <option value="Híbrido">Híbrido</option>
+                            <option value="Eléctrico">Eléctrico</option>
+                            <option value="GLP">GLP (Gas licuado)</option>
+                        </select>
+                        <small class="campo__error" id="error-combustible"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="precio">Precio (RD$)</label>
+                        <input type="number" id="precio" name="precio" step="0.01"
+                               placeholder="Ej: 1450000" required>
+                        <small class="campo__error" id="error-precio"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="cantidad">Cantidad disponible</label>
+                        <input type="number" id="cantidad" name="cantidad" step="1"
+                               placeholder="Ej: 5" required>
+                        <small class="campo__error" id="error-cantidad"></small>
+                    </div>
+
+                    <div class="campo campo--completo">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="3" maxlength="300"
+                                  placeholder="Características principales del vehículo" required></textarea>
+                        <small class="campo__error" id="error-descripcion"></small>
+                    </div>
+
+                    <div class="formulario__acciones campo--completo">
+                        <button type="submit" class="boton boton--primario" id="btnGuardar">Guardar vehículo</button>
+                        <button type="button" class="boton boton--secundario" id="btnLimpiar">Limpiar</button>
+                        <button type="button" class="boton boton--secundario oculto" id="btnCancelar">Cancelar edición</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ===================== CONSULTA DE VEHÍCULOS ===================== -->
+        <section id="inventario" class="contenedor seccion">
+            <div class="tarjeta">
+                <div class="tarjeta__encabezado tarjeta__encabezado--fila">
+                    <div>
+                        <h2>Vehículos registrados</h2>
+                        <span id="estadoConexion" class="estado-conexion">Conectando...</span>
+                    </div>
+                    <input type="search" id="buscar" class="buscador"
+                           placeholder="Buscar por código, marca, modelo..." aria-label="Buscar vehículo">
+                </div>
+
+                <div class="tabla-contenedor">
+                    <table class="tabla">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Año</th>
+                                <th>Color</th>
+                                <th>Combustible</th>
+                                <th class="numero">Precio</th>
+                                <th class="numero">Cantidad</th>
+                                <th class="centro">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoTabla">
+                            <!-- Las filas se generan desde js/app.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================== PIE DE PÁGINA ===================== -->
+    <footer id="contacto" class="pie">
+        <div class="contenedor pie__contenido">
+            <div>
+                <strong>AutoMax</strong>
+                <p>Vehículos nuevos con garantía de fábrica.</p>
+            </div>
+            <div>
+                <p>Tel.: (809) 000-0000</p>
+                <p>Correo: ventas@automax.com</p>
+            </div>
+        </div>
+        <p class="pie__derechos">&copy; <span id="anioActual"></span> AutoMax. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Mensajes emergentes -->
+    <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
