@@ -6,6 +6,7 @@
    PUT    /api/vehiculos/:codigo   -> Modificar (UPDATE)
    DELETE /api/vehiculos/:codigo   -> Eliminar (DELETE)
    Todas las consultas usan parámetros ($1, $2...) para evitar inyección SQL.
+   La llave primaria es "id" (autoincrementable); "codigo" es único.
    ========================================================== */
 
 const express = require('express');
@@ -15,7 +16,7 @@ const { validarVehiculo } = require('../validaciones');
 const router = express.Router();
 
 // Columnas que se devuelven al navegador (precio se convierte a número)
-const COLUMNAS = `codigo, marca, modelo, anio, color, combustible,
+const COLUMNAS = `id, codigo, marca, modelo, anio, color, combustible,
                   precio::float8 AS precio, cantidad, descripcion,
                   fecha_registro, fecha_actualizacion`;
 
@@ -55,6 +56,7 @@ router.post('/', async function (req, res, next) {
     }
 
     try {
+        // El "id" no se envía: PostgreSQL lo genera automáticamente
         const resultado = await pool.query(
             `INSERT INTO vehiculos
                 (codigo, marca, modelo, anio, color, combustible, precio, cantidad, descripcion)
@@ -65,7 +67,7 @@ router.post('/', async function (req, res, next) {
         );
         res.status(201).json(resultado.rows[0]);
     } catch (error) {
-        // 23505 = violación de llave primaria (código repetido)
+        // 23505 = violación de restricción UNIQUE (código repetido)
         if (error.code === '23505') {
             return res.status(409).json({
                 mensaje: 'Código repetido.',

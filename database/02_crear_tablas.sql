@@ -1,12 +1,14 @@
 -- ==========================================================
 -- AutoMax - Paso 2: Crear la tabla de vehículos
 -- Ejecutar conectado a la base "automax_db".
+-- ATENCIÓN: borra la tabla si ya existe (y sus datos).
 -- ==========================================================
 
 DROP TABLE IF EXISTS vehiculos;
 
 CREATE TABLE vehiculos (
-    codigo              VARCHAR(15)   PRIMARY KEY,                -- No permite códigos repetidos
+    id                  INTEGER       GENERATED ALWAYS AS IDENTITY PRIMARY KEY,  -- Autoincrementable
+    codigo              VARCHAR(15)   NOT NULL,                                  -- Código visible en el formulario
     marca               VARCHAR(40)   NOT NULL,
     modelo              VARCHAR(40)   NOT NULL,
     anio                SMALLINT      NOT NULL,
@@ -19,6 +21,7 @@ CREATE TABLE vehiculos (
     fecha_actualizacion TIMESTAMP,
 
     -- Reglas de negocio validadas también por la base de datos
+    CONSTRAINT uq_vehiculos_codigo  UNIQUE (codigo),                             -- No permite códigos repetidos
     CONSTRAINT chk_codigo_no_vacio  CHECK (TRIM(codigo) <> ''),
     CONSTRAINT chk_anio_valido      CHECK (anio BETWEEN 1900 AND 2100),
     CONSTRAINT chk_precio_positivo  CHECK (precio > 0),
