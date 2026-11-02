@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Inventario de vehículos nuevos de AutoMax en La Vega.">
+    <title>Inventario | AutoMax</title>
+    <link rel="icon" href="img/marca/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- ===================== ENCABEZADO Y MENÚ ===================== -->
+    <header class="encabezado" id="encabezado">
+        <div class="contenedor encabezado__contenido">
+            <a href="index.html" class="marca" aria-label="AutoMax, ir al inicio">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" class="marca__logo" width="265" height="91">
+            </a>
+
+            <button type="button" class="menu-boton" id="menuBoton" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="menu" id="menu" aria-label="Menú principal">
+                <button type="button" class="menu-cerrar" id="menuCerrar">Cerrar</button>
+                <ul class="menu__lista">
+                    <li><a href="index.html" class="menu__enlace">Inicio</a></li>
+                    <li><a href="inventario.html" class="menu__enlace" aria-current="page">Inventario</a></li>
+                    <li><a href="registrar.html" class="menu__enlace">Registrar</a></li>
+                    <li><a href="contacto.html" class="menu__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ===================== BANNER ===================== -->
+        <section class="banner banner--inventario">
+            <div class="contenedor banner__contenido">
+                <span class="etiqueta">AutoMax La Vega</span>
+                <h1>Inventario</h1>
+                <p>Vehículos nuevos disponibles en AutoMax. Busca por marca, modelo o color, o filtra por combustible.</p>
+            </div>
+        </section>
+
+        <!-- ===================== CONSULTA DE VEHÍCULOS ===================== -->
+        <section class="seccion">
+            <div class="contenedor">
+                <div class="herramientas">
+                    <div class="herramientas__fila">
+                        <input type="search" id="buscar" class="buscador"
+                               placeholder="Buscar por código, marca, modelo, color..." aria-label="Buscar vehículo">
+                        <a href="registrar.html" class="boton boton--primario">Registrar vehículo</a>
+                    </div>
+                    <div class="filtros" id="filtros" aria-label="Filtrar por combustible">
+                        <!-- Los botones de filtro se generan desde js/inventario.js -->
+                    </div>
+                    <div class="herramientas__fila">
+                        <span class="contador" id="contador"></span>
+                        <span id="estadoConexion" class="estado-conexion">Conectando...</span>
+                    </div>
+                </div>
+
+                <div class="grilla-vehiculos" id="grillaVehiculos" aria-live="polite">
+                    <!-- Las tarjetas se generan desde js/inventario.js -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================== PIE DE PÁGINA ===================== -->
+    <footer class="pie">
+        <div class="contenedor pie__rejilla">
+            <div class="pie__marca">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" width="265" height="91">
+                <p>Tu próximo vehículo empieza en La Vega.</p>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Navegación</h2>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="inventario.html">Inventario</a></li>
+                    <li><a href="registrar.html">Registrar vehículo</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Contacto</h2>
+                <ul>
+                    <li><a href="tel:+18294638905">Tel. 829-463-8905</a></li>
+                    <li><a href="https://wa.me/18493431887" target="_blank" rel="noopener">WhatsApp 849-343-1887</a></li>
+                    <li>ventas@automaxlavega.com</li>
+                    <li>La Vega, República Dominicana</li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Horario</h2>
+                <ul>
+                    <li>Lunes a viernes: 8:00 a. m. a 6:00 p. m.</li>
+                    <li>Sábados: 8:00 a. m. a 1:00 p. m.</li>
+                    <li>Domingos: cerrado</li>
+                </ul>
+            </div>
+        </div>
+        <div class="contenedor pie__base">
+            <p>&copy; <span id="anioActual"></span> AutoMax. Todos los derechos reservados.</p>
+            <ul class="redes" aria-label="Redes sociales">
+                <!-- Cambie href="#" por el enlace de cada cuenta cuando exista -->
+                <li><a class="red" href="#">Instagram</a></li>
+                <li><a class="red" href="#">Facebook</a></li>
+                <li><a class="red" href="#">TikTok</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Botón flotante de WhatsApp -->
+    <a class="whatsapp-flotante" href="https://wa.me/18493431887" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span>Escríbenos</span>
+    </a>
+
+    <!-- Mensajes emergentes -->
+    <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+    <script src="js/comun.js"></script>
+    <script src="js/inventario.js"></script>
+</body>
+</html>
