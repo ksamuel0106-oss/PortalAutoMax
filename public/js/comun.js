@@ -23,12 +23,16 @@ const formatoMoneda = new Intl.NumberFormat('es-DO', {
 
 // Envía una petición a la API y devuelve la respuesta en JSON.
 // Si el servidor responde con error, lanza una excepción con su mensaje.
+// Si el cuerpo es un FormData (formulario con foto), el navegador pone el encabezado.
 async function peticion(url, opciones) {
+    opciones = opciones || {};
+    const conArchivo = opciones.body instanceof FormData;
     let respuesta;
     try {
-        respuesta = await fetch(url, Object.assign({
-            headers: { 'Content-Type': 'application/json' }
-        }, opciones));
+        respuesta = await fetch(url, Object.assign(
+            conArchivo ? {} : { headers: { 'Content-Type': 'application/json' } },
+            opciones
+        ));
     } catch (error) {
         throw { mensaje: 'No se pudo conectar con el servidor. ¿Está ejecutándose "npm start"?' };
     }
@@ -77,25 +81,23 @@ function mostrarAviso(mensaje, tipo) {
 
 /* ==========================================================
    FOTO DE CADA VEHÍCULO
-   La foto se guarda en public/img/vehiculos/ con el código como
-   nombre (VH-001.jpg). Se prueba .jpg, luego .png y .webp; si no
-   existe ninguna, se muestra la foto genérica.
+   La columna "foto" guarda el nombre del archivo que está en
+   public/img/vehiculos/. Si está vacía o el archivo no existe,
+   se muestra la foto genérica.
    ========================================================== */
 
-const EXTENSIONES_FOTO = ['jpg', 'png', 'webp'];
+const FOTO_GENERICA = 'img/vehiculos/sin-foto.jpg';
 
-function asignarFoto(img, codigo) {
-    let intento = 0;
+function rutaFoto(nombre) {
+    return nombre ? 'img/vehiculos/' + encodeURIComponent(nombre) : FOTO_GENERICA;
+}
+
+function asignarFoto(img, vehiculo) {
     img.onerror = function () {
-        intento++;
-        if (intento < EXTENSIONES_FOTO.length) {
-            img.src = 'img/vehiculos/' + encodeURIComponent(codigo) + '.' + EXTENSIONES_FOTO[intento];
-        } else {
-            img.onerror = null;
-            img.src = 'img/vehiculos/sin-foto.jpg';
-        }
+        img.onerror = null;
+        img.src = FOTO_GENERICA;
     };
-    img.src = 'img/vehiculos/' + encodeURIComponent(codigo) + '.' + EXTENSIONES_FOTO[0];
+    img.src = rutaFoto(vehiculo.foto);
 }
 
 /* ==========================================================
@@ -129,7 +131,7 @@ function crearTarjetaVehiculo(v, conAcciones) {
     const img = document.createElement('img');
     img.alt = v.marca + ' ' + v.modelo + ' ' + v.anio;
     img.loading = 'lazy';
-    asignarFoto(img, v.codigo);
+    asignarFoto(img, v);
     foto.appendChild(img);
     foto.appendChild(crearElemento('span', 'chip chip--combustible', v.combustible));
     if (v.cantidad === 0) foto.appendChild(crearElemento('span', 'chip chip--agotado', 'Agotado'));

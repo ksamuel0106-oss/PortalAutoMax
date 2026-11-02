@@ -20,10 +20,27 @@ const btnGuardar       = document.getElementById('btnGuardar');
 const btnLimpiar       = document.getElementById('btnLimpiar');
 const btnCancelar      = document.getElementById('btnCancelar');
 const inputCodigo      = document.getElementById('codigo');
+const zonaFoto         = document.getElementById('zonaFoto');
+const inputFoto        = document.getElementById('foto');
+const vistaFoto        = document.getElementById('vistaFoto');
+const textoFoto        = document.getElementById('textoFoto');
+const btnElegirFoto    = document.getElementById('btnElegirFoto');
+const btnQuitarFoto    = document.getElementById('btnQuitarFoto');
+const errorFoto        = document.getElementById('error-foto');
+
+// ---------- Reglas de la foto ----------
+const TIPOS_FOTO = ['image/jpeg', 'image/png', 'image/webp'];
+const FOTO_MAX_BYTES = 5 * 1024 * 1024;   // 5 MB
+const FOTO_ANCHO_MAX = 1200;
+const FOTO_ALTO_MAX = 900;
 
 // ---------- Estado de la página ----------
 let vehiculos = [];             // Vehículos de la base, para avisar de códigos repetidos
 let codigoEnEdicion = null;     // Código del vehículo que se está modificando (null = registro nuevo)
+let fotoNueva = null;           // Foto elegida y ya reducida (Blob), lista para enviar
+let fotoActual = null;          // Nombre de la foto guardada del vehículo en edición
+let quitarFoto = false;         // true = al guardar, se elimina la foto actual
+let urlVista = null;            // Dirección temporal de la vista previa
 
 /* ==========================================================
    CONSULTA (SELECT)
@@ -128,6 +145,108 @@ function enfocarPrimerError(errores) {
 }
 
 /* ==========================================================
+   FOTO: ELEGIR, ARRASTRAR, REDUCIR Y VISTA PREVIA
+   ========================================================== */
+
+// Reduce la imagen a un máximo de 1200 × 900 px y la convierte a JPG.
+function reducirImagen(archivo) {
+    return new Promise(function (resolver, rechazar) {
+        const url = URL.createObjectURL(archivo);
+        const imagen = new Image();
+        imagen.onload = function () {
+            const escala = Math.min(1, FOTO_ANCHO_MAX / imagen.naturalWidth, FOTO_ALTO_MAX / imagen.naturalHeight);
+            const ancho = Math.round(imagen.naturalWidth * escala);
+            const alto = Math.round(imagen.naturalHeight * escala);
+            const lienzo = document.createElement('canvas');
+            lienzo.width = ancho;
+            lienzo.height = alto;
+            const contexto = lienzo.getContext('2d');
+            contexto.fillStyle = '#ffffff';            // Fondo blanco para PNG transparentes
+            contexto.fillRect(0, 0, ancho, alto);
+            contexto.drawImage(imagen, 0, 0, ancho, alto);
+            URL.revokeObjectURL(url);
+            lienzo.toBlob(function (blob) {
+                if (blob) resolver(blob);
+                else rechazar(new Error('No se pudo procesar la imagen. Pruebe con otro archivo.'));
+            }, 'image/jpeg', 0.82);
+        };
+        imagen.onerror = function () {
+            URL.revokeObjectURL(url);
+            rechazar(new Error('No se pudo leer la imagen. Pruebe con otro archivo.'));
+        };
+        imagen.src = url;
+    });
+}
+
+function mostrarErrorFoto(mensaje) {
+    errorFoto.textContent = mensaje || '';
+    zonaFoto.classList.toggle('zona-foto--error', Boolean(mensaje));
+}
+
+function mostrarVista(src) {
+    vistaFoto.src = src;
+    vistaFoto.classList.remove('oculto');
+    textoFoto.classList.add('oculto');
+    btnElegirFoto.textContent = 'Cambiar foto';
+    btnQuitarFoto.classList.remove('oculto');
+}
+
+function ocultarVista() {
+    vistaFoto.removeAttribute('src');
+    vistaFoto.classList.add('oculto');
+    textoFoto.classList.remove('oculto');
+    btnElegirFoto.textContent = 'Elegir archivo';
+    btnQuitarFoto.classList.add('oculto');
+}
+
+function liberarVista() {
+    if (urlVista) { URL.revokeObjectURL(urlVista); urlVista = null; }
+}
+
+// Revisa el archivo, lo reduce y muestra la vista previa.
+async function recibirArchivo(archivo) {
+    mostrarErrorFoto('');
+    if (!TIPOS_FOTO.includes(archivo.type)) {
+        mostrarErrorFoto('La foto debe ser JPG, PNG o WebP.');
+        return;
+    }
+    if (archivo.size > FOTO_MAX_BYTES) {
+        mostrarErrorFoto('La foto no puede pesar más de 5 MB.');
+        return;
+    }
+    try {
+        fotoNueva = await reducirImagen(archivo);
+        quitarFoto = false;
+        liberarVista();
+        urlVista = URL.createObjectURL(fotoNueva);
+        mostrarVista(urlVista);
+    } catch (error) {
+        fotoNueva = null;
+        mostrarErrorFoto(error.message);
+    }
+}
+
+// Deja la foto vacía. Si el vehículo tenía una foto guardada, se borrará al guardar.
+function quitarFotoElegida() {
+    fotoNueva = null;
+    liberarVista();
+    if (fotoActual) quitarFoto = true;
+    inputFoto.value = '';
+    mostrarErrorFoto('');
+    ocultarVista();
+}
+
+function reiniciarFoto() {
+    fotoNueva = null;
+    fotoActual = null;
+    quitarFoto = false;
+    liberarVista();
+    inputFoto.value = '';
+    mostrarErrorFoto('');
+    ocultarVista();
+}
+
+/* ==========================================================
    REGISTRO (INSERT) Y ACTUALIZACIÓN (UPDATE)
    ========================================================== */
 
@@ -146,15 +265,21 @@ async function manejarEnvio(evento) {
     const esNuevo = codigoEnEdicion === null;
     bloquearFormulario(true);
 
+    // Los datos y la foto viajan juntos en un FormData (multipart/form-data)
+    const cuerpo = new FormData();
+    CAMPOS.forEach(function (campo) { cuerpo.append(campo, datos[campo]); });
+    if (fotoNueva) cuerpo.append('foto', fotoNueva, 'foto.jpg');
+    else if (quitarFoto) cuerpo.append('quitarFoto', 'true');
+
     try {
         if (esNuevo) {
-            await peticion(API, { method: 'POST', body: JSON.stringify(datos) });
+            await peticion(API, { method: 'POST', body: cuerpo });
             mostrarAviso('Vehículo ' + datos.codigo + ' registrado en la base de datos.', 'exito');
             reiniciarFormulario();
             await cargarVehiculos();
         } else {
             await peticion(API + '/' + encodeURIComponent(codigoEnEdicion),
-                           { method: 'PUT', body: JSON.stringify(datos) });
+                           { method: 'PUT', body: cuerpo });
             // Vuelve al inventario, que muestra el aviso de actualización
             window.location.href = 'inventario.html?actualizado=' + encodeURIComponent(datos.codigo);
             return;
@@ -162,6 +287,7 @@ async function manejarEnvio(evento) {
     } catch (error) {
         // Errores de validación devueltos por el servidor (ej.: código repetido)
         mostrarErrores(error.errores || {});
+        if (error.errores && error.errores.foto) mostrarErrorFoto(error.errores.foto);
         enfocarPrimerError(error.errores || {});
         mostrarAviso(error.mensaje, 'error');
         if (error.estado === 404) {
@@ -188,6 +314,11 @@ function editarVehiculo(vehiculo) {
     });
     mostrarErrores({});
 
+    // Foto guardada del vehículo
+    reiniciarFoto();
+    fotoActual = vehiculo.foto || null;
+    if (fotoActual) mostrarVista(rutaFoto(fotoActual));
+
     // El código identifica al vehículo, por eso no se modifica
     inputCodigo.readOnly = true;
     tituloFormulario.textContent = 'Modificar vehículo ' + vehiculo.codigo;
@@ -202,6 +333,7 @@ function editarVehiculo(vehiculo) {
 function reiniciarFormulario() {
     formulario.reset();
     mostrarErrores({});
+    reiniciarFoto();
     codigoEnEdicion = null;
     inputCodigo.readOnly = false;
     tituloFormulario.textContent = 'Registrar vehículo';
@@ -239,6 +371,40 @@ formulario.addEventListener('submit', manejarEnvio);
 btnLimpiar.addEventListener('click', reiniciarFormulario);
 btnCancelar.addEventListener('click', function () {
     window.location.href = 'inventario.html';
+});
+
+// Foto: botón "Elegir archivo"
+inputFoto.addEventListener('change', function () {
+    if (inputFoto.files.length > 0) recibirArchivo(inputFoto.files[0]);
+    inputFoto.value = '';   // Permite volver a elegir el mismo archivo
+});
+btnQuitarFoto.addEventListener('click', quitarFotoElegida);
+
+// Foto: arrastrar y soltar desde la computadora
+['dragenter', 'dragover'].forEach(function (tipo) {
+    zonaFoto.addEventListener(tipo, function (evento) {
+        evento.preventDefault();
+        zonaFoto.classList.add('zona-foto--encima');
+    });
+});
+zonaFoto.addEventListener('dragleave', function (evento) {
+    if (!zonaFoto.contains(evento.relatedTarget)) zonaFoto.classList.remove('zona-foto--encima');
+});
+zonaFoto.addEventListener('drop', function (evento) {
+    evento.preventDefault();
+    zonaFoto.classList.remove('zona-foto--encima');
+    const archivos = evento.dataTransfer.files;
+    if (archivos.length > 0) {
+        recibirArchivo(archivos[0]);
+    } else {
+        mostrarErrorFoto('Arrastre la foto desde una carpeta de su computadora. Si está en una página web, descárguela primero.');
+    }
+});
+// Si la foto cae fuera de la zona, el navegador no la abre (así no se pierde el formulario)
+['dragover', 'drop'].forEach(function (tipo) {
+    window.addEventListener(tipo, function (evento) {
+        if (!zonaFoto.contains(evento.target)) evento.preventDefault();
+    });
 });
 
 // Al escribir en un campo se borra su mensaje de error

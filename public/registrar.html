@@ -114,6 +114,24 @@
                             <small class="campo__error" id="error-descripcion"></small>
                         </div>
 
+                        <div class="campo campo--completo">
+                            <span class="campo__titulo" id="tituloFoto">Foto del vehículo <span class="campo__opcional">(opcional)</span></span>
+                            <div class="zona-foto" id="zonaFoto" aria-describedby="notaFoto">
+                                <img class="zona-foto__vista oculto" id="vistaFoto" alt="Vista previa de la foto del vehículo">
+                                <div class="zona-foto__texto" id="textoFoto">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>
+                                    <p><strong>Arrastra la foto aquí</strong> desde tu computadora</p>
+                                </div>
+                                <div class="zona-foto__acciones">
+                                    <label for="foto" class="boton boton--secundario boton--chico" id="btnElegirFoto">Elegir archivo</label>
+                                    <button type="button" class="boton boton--peligro boton--chico oculto" id="btnQuitarFoto">Quitar foto</button>
+                                </div>
+                                <input type="file" id="foto" name="foto" class="entrada-archivo" accept="image/jpeg,image/png,image/webp" aria-labelledby="tituloFoto">
+                            </div>
+                            <small class="zona-foto__nota" id="notaFoto">JPG, PNG o WebP, hasta 5 MB. Se ajusta a 1200 × 900 px antes de enviarse.</small>
+                            <small class="campo__error" id="error-foto"></small>
+                        </div>
+
                         <div class="formulario__acciones campo--completo">
                             <button type="submit" class="boton boton--primario" id="btnGuardar">Guardar vehículo</button>
                             <button type="button" class="boton boton--secundario" id="btnLimpiar">Limpiar</button>
@@ -129,7 +147,7 @@
                         <li>El año debe estar entre 1900 y el próximo año.</li>
                         <li>El precio debe ser mayor que cero.</li>
                         <li>La cantidad es un número entero, 0 o más.</li>
-                        <li>La foto se agrega en <strong>img/vehiculos/</strong> con el código como nombre.</li>
+                        <li>Foto opcional: JPG, PNG o WebP, hasta 5 MB.</li>
                     </ul>
                 </aside>
             </div>

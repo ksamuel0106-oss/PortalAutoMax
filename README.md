@@ -27,12 +27,13 @@ AgenciaVehiculos/
 ├── src/
 │   ├── db.js                   Conexión a PostgreSQL (Pool de "pg")
 │   ├── validaciones.js         Validaciones del lado del servidor
-│   └── rutas/vehiculos.js      API REST: SELECT, INSERT, UPDATE, DELETE
+│   └── rutas/vehiculos.js      API REST: SELECT, INSERT, UPDATE, DELETE y subida de fotos (multer)
 ├── database/
 │   ├── 01_crear_base_datos.sql
 │   ├── 02_crear_tablas.sql     Tabla con id autoincrementable y codigo único
 │   ├── 03_pruebas.sql          Pruebas de inserción y consulta
-│   └── 04_datos_vehiculos.sql  15 vehículos de ejemplo
+│   ├── 04_datos_vehiculos.sql  15 vehículos de ejemplo
+│   └── 05_agregar_foto.sql     Agrega la columna foto a una tabla existente
 ├── server.js                   Punto de entrada del servidor
 ├── package.json
 └── .env.example                Plantilla de la configuración de conexión
@@ -40,7 +41,14 @@ AgenciaVehiculos/
 
 ### Fotos de los vehículos
 
-Cada foto se guarda en `public/img/vehiculos/` con el código del vehículo como nombre, por ejemplo `VH-001.jpg`. Se acepta `.jpg`, `.png` o `.webp`. Si un vehículo no tiene foto, el portal muestra `sin-foto.jpg`.
+La foto es opcional y se sube desde el formulario de Registrar, con el botón "Elegir archivo" o arrastrándola desde la computadora. Acepta JPG, PNG o WebP de hasta 5 MB; el navegador la reduce a un máximo de 1200 × 900 px antes de enviarla.
+
+- El archivo se guarda en `public/img/vehiculos/` y la columna `foto` de la tabla guarda su nombre.
+- Al editar se puede cambiar o quitar la foto. Al eliminar un vehículo, también se borra su foto.
+- Las fotos subidas no se suben a GitHub (están en `.gitignore`), igual que los datos de cada base.
+- La API usa la librería `multer` para recibir el archivo (`multipart/form-data`, campo `foto`). POST y PUT siguen aceptando JSON sin foto.
+
+**Si su tabla ya existía sin la columna `foto`**, ejecute `database/05_agregar_foto.sql` sobre `automax_db`. No borra datos.
 
 ## Requisitos
 

@@ -1016,6 +1016,97 @@ a {
     margin-top: 8px;
 }
 
+/* ---------- Foto del vehículo (formulario) ---------- */
+.campo__titulo {
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.campo__opcional {
+    font-weight: 400;
+    color: var(--texto-suave);
+}
+
+.zona-foto {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    padding: 24px;
+    border: 2px dashed var(--borde);
+    border-radius: var(--radio);
+    background-color: #f8f9fc;
+    text-align: center;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.zona-foto--encima {
+    border-color: var(--azul);
+    background-color: #edf2fb;
+}
+
+.zona-foto--error {
+    border-color: var(--error);
+    background-color: #fff6f6;
+}
+
+.zona-foto__texto {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    color: var(--texto-suave);
+}
+
+.zona-foto__texto svg {
+    width: 44px;
+    height: 44px;
+    fill: none;
+    stroke: var(--azul);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.zona-foto__texto strong {
+    color: var(--azul-oscuro);
+}
+
+.zona-foto__vista {
+    width: min(360px, 100%);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: var(--sombra);
+}
+
+.zona-foto__acciones {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* El input real queda oculto; se usa con el botón "Elegir archivo" */
+.entrada-archivo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.zona-foto:has(.entrada-archivo:focus-visible) {
+    outline: 3px solid var(--rojo);
+    outline-offset: 2px;
+}
+
+.zona-foto__nota {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+}
+
 /* ---------- Contacto ---------- */
 .contacto {
     display: grid;
@@ -1458,4 +1549,102 @@ a {
     *::after {
         transition: none !important;
     }
+}
+
+/* ---------- Foto del vehículo en el formulario ---------- */
+.campo__etiqueta {
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.zona-foto {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+    border: 2px dashed var(--borde);
+    border-radius: var(--radio);
+    background-color: #f8f9fc;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.zona-foto.arrastrando {
+    border-color: var(--azul);
+    background-color: #edf2fb;
+}
+
+.zona-foto.invalido {
+    border-color: var(--error);
+    background-color: #fff6f6;
+}
+
+.zona-foto__vista {
+    width: 160px;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #e9edf4;
+}
+
+.zona-foto__texto {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    grid-column: 2;
+}
+
+.zona-foto__vista.oculto + .zona-foto__texto {
+    grid-column: 1 / -1;
+}
+
+.zona-foto__texto strong {
+    color: var(--azul-oscuro);
+}
+
+.zona-foto__texto span {
+    font-size: 0.88rem;
+    color: var(--texto-suave);
+}
+
+.zona-foto__botones {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+/* El campo de archivo real queda oculto; se usa el botón "Elegir archivo" */
+.zona-foto__archivo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.zona-foto:has(.zona-foto__archivo:focus-visible) label.boton {
+    outline: 3px solid var(--rojo);
+    outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+    .zona-foto {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .zona-foto__vista {
+        width: 100%;
+    }
+
+    .zona-foto__texto {
+        grid-column: 1;
+    }
+}
+
+/* Sin foto: el texto y el botón ocupan todo el ancho, centrados */
+.zona-foto__vista.oculto ~ .zona-foto__acciones {
+    grid-column: 1 / -1;
 }

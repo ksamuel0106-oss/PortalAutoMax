@@ -1,2 +1,6 @@
 node_modules/
 .env
+
+# Fotos subidas desde el formulario: cada uno tiene las suyas, igual que los datos de su base
+public/img/vehiculos/*
+!public/img/vehiculos/sin-foto.jpg

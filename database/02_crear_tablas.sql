@@ -17,6 +17,7 @@ CREATE TABLE vehiculos (
     precio              NUMERIC(12,2) NOT NULL,
     cantidad            INTEGER       NOT NULL,
     descripcion         VARCHAR(300)  NOT NULL,
+    foto                VARCHAR(255),                                            -- Nombre del archivo en public/img/vehiculos (opcional)
     fecha_registro      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion TIMESTAMP,
 
@@ -30,3 +31,4 @@ CREATE TABLE vehiculos (
 );
 
 COMMENT ON TABLE vehiculos IS 'Vehículos nuevos disponibles para la venta en AutoMax';
+COMMENT ON COLUMN vehiculos.foto IS 'Nombre del archivo de la foto en public/img/vehiculos; NULL = sin foto';
