@@ -1,0 +1,313 @@
+/* ==========================================================
+   AutoMax - Pantalla de inicio de sesión y usuario en el menú
+   Usa las variables y clases de estilos.css (.boton, .campo,
+   .etiqueta) para mantener el mismo diseño del portal.
+   ========================================================== */
+
+.pagina-login {
+    min-height: 100vh;
+    background-color: var(--fondo);
+}
+
+.login {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    min-height: 100vh;
+}
+
+/* ---------- Panel visual (izquierda) ---------- */
+.login__visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 36px 48px 56px;
+    overflow: hidden;
+    color: var(--blanco);
+    background-color: var(--azul-oscuro);
+    border-right: 4px solid var(--rojo);
+}
+
+.login__foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Degradado azul para que el texto se lea sobre la foto */
+.login__visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(15, 35, 70, 0.95) 0%, rgba(15, 35, 70, 0.55) 45%, rgba(15, 35, 70, 0.35) 100%);
+}
+
+.login__marca,
+.login__mensaje {
+    position: relative;
+    z-index: 1;
+}
+
+.login__marca img {
+    width: auto;
+    height: 58px;
+}
+
+.login__mensaje h1 {
+    max-width: 16ch;
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    font-weight: 700;
+}
+
+.login__mensaje p {
+    max-width: 44ch;
+    margin-top: 14px;
+    color: #dbe3f1;
+    font-size: 1.05rem;
+}
+
+/* ---------- Panel de formularios (derecha) ---------- */
+.login__panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+}
+
+.login__caja {
+    width: 100%;
+    max-width: 440px;
+    padding: 36px 34px;
+    background-color: var(--blanco);
+    border-radius: 16px;
+    border-top: 4px solid var(--rojo);
+    box-shadow: var(--sombra-alta);
+}
+
+.login__logo-movil {
+    display: none;
+    width: auto;
+    height: 46px;
+    margin: 0 auto 22px;
+}
+
+.pestanas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    margin-bottom: 26px;
+    background-color: var(--fondo);
+    border-radius: var(--radio-pildora);
+}
+
+.pestana {
+    padding: 10px 8px;
+    border: none;
+    border-radius: var(--radio-pildora);
+    background: transparent;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pestana:hover {
+    color: var(--azul-oscuro);
+}
+
+.pestana.activa {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+.form-acceso .etiqueta {
+    margin-bottom: 6px;
+}
+
+.form-acceso__titulo {
+    font-size: 1.6rem;
+    color: var(--azul-oscuro);
+}
+
+.form-acceso__nota {
+    margin: 6px 0 20px;
+    color: var(--texto-suave);
+}
+
+.form-acceso .campo {
+    margin-bottom: 4px;
+}
+
+.campo__clave {
+    position: relative;
+}
+
+.campo__clave input {
+    padding-right: 74px;
+}
+
+.ver-clave {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    padding: 4px 10px;
+    border: none;
+    border-radius: var(--radio-pildora);
+    background: transparent;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--azul);
+    cursor: pointer;
+}
+
+.ver-clave:hover {
+    background-color: var(--fondo);
+}
+
+.boton--bloque {
+    width: 100%;
+    margin-top: 6px;
+}
+
+.boton--invitado {
+    background-color: var(--blanco);
+    border-color: var(--azul-oscuro);
+    color: var(--azul-oscuro);
+}
+
+.boton--invitado:hover {
+    background-color: var(--azul-oscuro);
+    color: var(--blanco);
+}
+
+.separador {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 16px;
+    color: var(--texto-suave);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.separador::before,
+.separador::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: var(--borde);
+}
+
+.login__pie {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+
+/* ---------- Mensaje de acceso correcto / incorrecto ---------- */
+.mensaje {
+    margin-bottom: 18px;
+    padding: 12px 16px;
+    border-radius: var(--radio);
+    border-left: 4px solid transparent;
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+
+.mensaje--exito {
+    background-color: #e6f4ed;
+    border-left-color: var(--exito);
+    color: var(--exito);
+}
+
+.mensaje--error {
+    background-color: #fdeaea;
+    border-left-color: var(--error);
+    color: var(--error);
+}
+
+/* ---------- Reglas de la contraseña (se marcan en verde al cumplirse) ---------- */
+.reglas-clave {
+    display: grid;
+    gap: 3px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8rem;
+    color: var(--texto-suave);
+}
+
+.reglas-clave li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.reglas-clave li::before {
+    content: "";
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--borde);
+    border-radius: 50%;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.reglas-clave li.cumple {
+    color: var(--exito);
+    font-weight: 600;
+}
+
+.reglas-clave li.cumple::before {
+    border-color: var(--exito);
+    background-color: var(--exito);
+}
+
+.reglas-clave li.falla {
+    color: var(--error);
+}
+
+.reglas-clave li.falla::before {
+    border-color: var(--error);
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 760px) {
+    .login {
+        grid-template-columns: 1fr;
+    }
+
+    .login__visual {
+        display: none;
+    }
+
+    .login__panel {
+        align-items: flex-start;
+        padding: 28px 16px 40px;
+        background:
+            linear-gradient(180deg, rgba(15, 35, 70, 0.92) 0, rgba(15, 35, 70, 0.92) 190px, transparent 190px),
+            var(--fondo);
+    }
+
+    .login__caja {
+        padding: 26px 20px;
+    }
+
+    .login__logo-movil {
+        display: block;
+    }
+}

@@ -1,22 +1,26 @@
 {
   "name": "agencia-vehiculos-automax",
-  "version": "2.0.0",
-  "description": "Portal web de AutoMax para registrar y consultar vehículos nuevos usando PostgreSQL",
-  "main": "server.js",
+  "version": "4.0.0",
+  "description": "Portal web de AutoMax con login, roles y gestión de vehículos nuevos y usados usando PostgreSQL",
+  "main": "backend/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js"
   },
   "keywords": [
     "automax",
     "vehiculos",
+    "login",
+    "roles",
     "postgresql",
     "express"
   ],
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
+    "express-session": "^1.19.0",
     "multer": "^2.5.0",
     "pg": "^8.13.1"
   }

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sucursales de AutoMax en La Vega, Santiago, Bonao y San Francisco de Macorís.">
+    <title>Sucursales | AutoMax</title>
+    <link rel="icon" href="img/marca/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/estilos.css">
+    <!-- Revisa la sesión en el servidor: sin sesión vuelve al login; aplica el rol (admin, usuario o invitado) -->
+    <script src="js/sesion.js"></script>
+</head>
+<body>
+
+    <!-- ===================== ENCABEZADO Y MENÚ ===================== -->
+    <header class="encabezado" id="encabezado">
+        <!-- Barra de bienvenida: js/sesion.js escribe el nombre y el rol -->
+        <div class="barra-sesion" id="barraSesion">
+            <div class="contenedor barra-sesion__contenido">
+                <p class="barra-sesion__saludo">Bienvenido, <strong id="saludoNombre"></strong>
+                    <span class="chip-rol" id="chipRol"></span></p>
+                <p class="barra-sesion__modo solo-admin">Modo administrador: puedes registrar, editar y eliminar vehículos</p>
+                <button type="button" class="barra-sesion__salir" id="btnSalir">Cerrar sesión</button>
+            </div>
+        </div>
+
+        <div class="contenedor encabezado__contenido">
+            <a href="index.html" class="marca" aria-label="AutoMax, ir al inicio">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" class="marca__logo" width="265" height="91">
+            </a>
+
+            <button type="button" class="menu-boton" id="menuBoton" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="menu" id="menu" aria-label="Menú principal">
+                <button type="button" class="menu-cerrar" id="menuCerrar">Cerrar</button>
+                <ul class="menu__lista">
+                    <li><a href="index.html" class="menu__enlace">Inicio</a></li>
+                    <!-- Usuario e invitado: vehículos nuevos y usados -->
+                    <li class="solo-no-admin"><a href="inventario.html?condicion=Nuevo" class="menu__enlace" data-condicion="Nuevo">Vehículos nuevos</a></li>
+                    <li class="solo-no-admin"><a href="inventario.html?condicion=Usado" class="menu__enlace" data-condicion="Usado">Vehículos usados</a></li>
+                    <!-- Administrador: inventario con todos, nuevos y usados -->
+                    <li class="menu__grupo solo-admin">
+                        <button type="button" class="menu__enlace menu__desplegar" id="btnInventario" aria-expanded="false" aria-controls="submenuInventario">
+                            Inventario <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <ul class="submenu" id="submenuInventario">
+                            <li><a href="inventario.html?condicion=Todos" class="submenu__enlace" data-condicion="Todos">Todos</a></li>
+                            <li><a href="inventario.html?condicion=Nuevo" class="submenu__enlace" data-condicion="Nuevo">Vehículos nuevos</a></li>
+                            <li><a href="inventario.html?condicion=Usado" class="submenu__enlace" data-condicion="Usado">Vehículos usados</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="nosotros.html" class="menu__enlace">Nosotros</a></li>
+                    <li><a href="sucursales.html" class="menu__enlace" aria-current="page">Sucursales</a></li>
+                    <li class="solo-admin"><a href="registrar.html" class="menu__enlace">Registro de vehículos</a></li>
+                    <li class="solo-no-admin">
+                        <button type="button" class="menu__enlace menu__bloqueado" id="btnRegistroBloqueado" title="Solo administradores">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Registro de vehículos
+                        </button>
+                    </li>
+                    <li><a href="contacto.html" class="menu__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ===================== BANNER ===================== -->
+        <section class="banner banner--sucursales">
+            <div class="contenedor banner__contenido">
+                <span class="etiqueta">AutoMax La Vega</span>
+                <h1>Sucursales</h1>
+                <p>Cuatro puntos en el Cibao para ver vehículos, hacer una prueba de manejo o llevar el tuyo al taller.</p>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <div class="contenedor">
+                <div class="seccion__cabecera">
+                    <div>
+                        <span class="etiqueta">Encuéntranos</span>
+                        <h2 class="titulo-seccion">Elige la sucursal más cercana</h2>
+                    </div>
+                    <p>Todas comparten el mismo horario y la misma central telefónica. Si no sabes cuál te conviene, escríbenos y te orientamos.</p>
+                </div>
+                <div class="sucursales">
+                <article class="sucursal sucursal--principal">
+                    <div class="sucursal__foto">
+                        <img src="img/sucursales/sucursal-la-vega.jpg" alt="Fachada de la sucursal de AutoMax en La Vega" loading="lazy" width="1200" height="800"
+                             onerror="this.onerror=null; this.src='img/banners/banner-contacto.jpg'">
+                        <span class="chip sucursal__tipo">Casa matriz</span>
+                    </div>
+                    <div class="sucursal__cuerpo">
+                        <h3>La Vega</h3>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Calle Duarte No. 120, Centro, La Vega</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Lunes a viernes 8:00 a. m. a 6:00 p. m. · Sábados 8:00 a. m. a 1:00 p. m.</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span>Central: 829-463-8905</span></p>
+                        <ul class="sucursal__servicios" aria-label="Servicios"><li>Ventas</li><li>Usados</li><li>Taller</li><li>Piezas</li></ul>
+                        <div class="sucursal__acciones">
+                            <a href="https://wa.me/18493431887?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20la%20sucursal%20de%20La%20Vega." class="boton boton--primario boton--chico" target="_blank" rel="noopener">WhatsApp</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=La%20Vega%2C%20Rep%C3%BAblica%20Dominicana" class="boton boton--secundario boton--chico" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg> Ver mapa</a>
+                        </div>
+                    </div>
+                </article>
+                <article class="sucursal">
+                    <div class="sucursal__foto">
+                        <img src="img/sucursales/sucursal-santiago.jpg" alt="Fachada de la sucursal de AutoMax en Santiago" loading="lazy" width="1200" height="800"
+                             onerror="this.onerror=null; this.src='img/banners/banner-contacto.jpg'">
+                        <span class="chip sucursal__tipo">Sucursal</span>
+                    </div>
+                    <div class="sucursal__cuerpo">
+                        <h3>Santiago</h3>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Av. 27 de Febrero No. 350, Santiago de los Caballeros</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Lunes a viernes 8:00 a. m. a 6:00 p. m. · Sábados 8:00 a. m. a 1:00 p. m.</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span>Central: 829-463-8905</span></p>
+                        <ul class="sucursal__servicios" aria-label="Servicios"><li>Ventas</li><li>Usados</li><li>Taller</li></ul>
+                        <div class="sucursal__acciones">
+                            <a href="https://wa.me/18493431887?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20la%20sucursal%20de%20Santiago." class="boton boton--primario boton--chico" target="_blank" rel="noopener">WhatsApp</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Santiago%2C%20Rep%C3%BAblica%20Dominicana" class="boton boton--secundario boton--chico" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg> Ver mapa</a>
+                        </div>
+                    </div>
+                </article>
+                <article class="sucursal">
+                    <div class="sucursal__foto">
+                        <img src="img/sucursales/sucursal-bonao.jpg" alt="Fachada de la sucursal de AutoMax en Bonao" loading="lazy" width="1200" height="800"
+                             onerror="this.onerror=null; this.src='img/banners/banner-contacto.jpg'">
+                        <span class="chip sucursal__tipo">Sucursal</span>
+                    </div>
+                    <div class="sucursal__cuerpo">
+                        <h3>Bonao</h3>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Calle Duarte No. 58, Bonao, Monseñor Nouel</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Lunes a viernes 8:00 a. m. a 6:00 p. m. · Sábados 8:00 a. m. a 1:00 p. m.</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span>Central: 829-463-8905</span></p>
+                        <ul class="sucursal__servicios" aria-label="Servicios"><li>Ventas</li><li>Piezas</li></ul>
+                        <div class="sucursal__acciones">
+                            <a href="https://wa.me/18493431887?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20la%20sucursal%20de%20Bonao." class="boton boton--primario boton--chico" target="_blank" rel="noopener">WhatsApp</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Bonao%2C%20Rep%C3%BAblica%20Dominicana" class="boton boton--secundario boton--chico" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg> Ver mapa</a>
+                        </div>
+                    </div>
+                </article>
+                <article class="sucursal">
+                    <div class="sucursal__foto">
+                        <img src="img/sucursales/sucursal-sfm.jpg" alt="Fachada de la sucursal de AutoMax en San Francisco de Macorís" loading="lazy" width="1200" height="800"
+                             onerror="this.onerror=null; this.src='img/banners/banner-contacto.jpg'">
+                        <span class="chip sucursal__tipo">Sucursal</span>
+                    </div>
+                    <div class="sucursal__cuerpo">
+                        <h3>San Francisco de Macorís</h3>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Av. Libertad No. 210, San Francisco de Macorís</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Lunes a viernes 8:00 a. m. a 6:00 p. m. · Sábados 8:00 a. m. a 1:00 p. m.</span></p>
+                        <p class="sucursal__dato"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg><span>Central: 829-463-8905</span></p>
+                        <ul class="sucursal__servicios" aria-label="Servicios"><li>Ventas</li><li>Usados</li><li>Taller</li></ul>
+                        <div class="sucursal__acciones">
+                            <a href="https://wa.me/18493431887?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20la%20sucursal%20de%20San%20Francisco%20de%20Macor%C3%ADs." class="boton boton--primario boton--chico" target="_blank" rel="noopener">WhatsApp</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=San%20Francisco%20de%20Macor%C3%ADs%2C%20Rep%C3%BAblica%20Dominicana" class="boton boton--secundario boton--chico" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg> Ver mapa</a>
+                        </div>
+                    </div>
+                </article>
+                </div>
+                <p class="nota-ficticia">Proyecto académico: las direcciones de las sucursales son de ejemplo.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================== PIE DE PÁGINA ===================== -->
+    <footer class="pie">
+        <div class="contenedor pie__rejilla">
+            <div class="pie__marca">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" width="265" height="91">
+                <p>Tu próximo vehículo empieza en La Vega.</p>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Navegación</h2>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="inventario.html?condicion=Nuevo">Vehículos nuevos</a></li>
+                    <li><a href="inventario.html?condicion=Usado">Vehículos usados</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="sucursales.html">Sucursales</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Contacto</h2>
+                <ul>
+                    <li><a href="tel:+18294638905">Tel. 829-463-8905</a></li>
+                    <li><a href="https://wa.me/18493431887" target="_blank" rel="noopener">WhatsApp 849-343-1887</a></li>
+                    <li>ventas@automaxlavega.com</li>
+                    <li><a href="sucursales.html">La Vega, Santiago, Bonao y San Francisco de Macorís</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Horario</h2>
+                <ul>
+                    <li>Lunes a viernes: 8:00 a. m. a 6:00 p. m.</li>
+                    <li>Sábados: 8:00 a. m. a 1:00 p. m.</li>
+                    <li>Domingos: cerrado</li>
+                </ul>
+            </div>
+        </div>
+        <div class="contenedor pie__base">
+            <p>&copy; <span id="anioActual"></span> AutoMax. Todos los derechos reservados.</p>
+            <ul class="redes" aria-label="Redes sociales">
+                <!-- Cambie href="#" por el enlace de cada cuenta cuando exista -->
+                <li><a class="red" href="#">Instagram</a></li>
+                <li><a class="red" href="#">Facebook</a></li>
+                <li><a class="red" href="#">TikTok</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Botón flotante de WhatsApp -->
+    <a class="whatsapp-flotante" href="https://wa.me/18493431887" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span>Escríbenos</span>
+    </a>
+
+    <!-- Mensajes emergentes -->
+    <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+    <script src="js/comun.js"></script>
+</body>
+</html>

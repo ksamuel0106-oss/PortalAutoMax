@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Inicio de sesión del portal de AutoMax, agencia de vehículos en La Vega.">
+    <title>AutoMax | Iniciar sesión</title>
+    <link rel="icon" href="img/marca/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="pagina-login">
+
+    <main class="login">
+        <!-- ===================== PANEL VISUAL ===================== -->
+        <section class="login__visual" aria-label="AutoMax">
+            <img src="img/login/login.jpg" alt="Vehículo en el salón de exhibición de AutoMax"
+                 class="login__foto" width="1200" height="1500"
+                 onerror="this.onerror=null; this.src='img/portada/portada.jpg'">
+
+            <a href="login.html" class="login__marca" aria-label="AutoMax">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" width="265" height="91">
+            </a>
+
+            <div class="login__mensaje">
+                <span class="etiqueta">AutoMax La Vega</span>
+                <h1>Tu próximo vehículo empieza en La Vega</h1>
+                <p>Inicia sesión o entra como invitado para ver nuestros vehículos nuevos y usados.</p>
+            </div>
+        </section>
+
+        <!-- ===================== PANEL DE FORMULARIOS ===================== -->
+        <section class="login__panel">
+            <div class="login__caja">
+                <img src="img/marca/logo-color.png" alt="AutoMax" class="login__logo-movil" width="265" height="91">
+
+                <div class="pestanas" role="tablist" aria-label="Acceso">
+                    <button type="button" class="pestana activa" role="tab" id="tabLogin"
+                            aria-selected="true" aria-controls="formLogin">Iniciar sesión</button>
+                    <button type="button" class="pestana" role="tab" id="tabRegistro"
+                            aria-selected="false" aria-controls="formRegistro">Crear cuenta</button>
+                </div>
+
+                <div id="mensaje" class="mensaje oculto" role="alert"></div>
+
+                <!-- ---------- Inicio de sesión ---------- -->
+                <form id="formLogin" class="form-acceso" role="tabpanel" aria-labelledby="tabLogin" novalidate>
+                    <span class="etiqueta">Bienvenido</span>
+                    <h2 class="form-acceso__titulo">Accede a tu cuenta</h2>
+                    <p class="form-acceso__nota">Ingresa con tu correo y contraseña.</p>
+
+                    <div class="campo">
+                        <label for="loginCorreo">Correo electrónico</label>
+                        <input type="email" id="loginCorreo" name="correo" placeholder="usuario@correo.com"
+                               autocomplete="email" required>
+                        <small class="campo__error" id="error-loginCorreo"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="loginPassword">Contraseña</label>
+                        <div class="campo__clave">
+                            <input type="password" id="loginPassword" name="password" placeholder="••••••••"
+                                   autocomplete="current-password" required>
+                            <button type="button" class="ver-clave" data-objetivo="loginPassword">Ver</button>
+                        </div>
+                        <small class="campo__error" id="error-loginPassword"></small>
+                    </div>
+
+                    <button type="submit" class="boton boton--primario boton--bloque" id="btnLogin">Iniciar sesión</button>
+                </form>
+
+                <!-- ---------- Registro ---------- -->
+                <form id="formRegistro" class="form-acceso oculto" role="tabpanel" aria-labelledby="tabRegistro" novalidate>
+                    <span class="etiqueta">Nuevo usuario</span>
+                    <h2 class="form-acceso__titulo">Crea tu cuenta</h2>
+                    <p class="form-acceso__nota">Regístrate para acceder al portal de vehículos.</p>
+
+                    <div class="campo">
+                        <label for="regNombre">Nombre completo</label>
+                        <input type="text" id="regNombre" name="nombre" maxlength="80" placeholder="Ej: Juan Pérez"
+                               autocomplete="name" required>
+                        <small class="campo__error" id="error-regNombre"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="regCorreo">Correo electrónico</label>
+                        <input type="email" id="regCorreo" name="correo" maxlength="120" placeholder="usuario@correo.com"
+                               autocomplete="email" required>
+                        <small class="campo__error" id="error-regCorreo"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="regPassword">Contraseña</label>
+                        <div class="campo__clave">
+                            <input type="password" id="regPassword" name="password" maxlength="64"
+                                   placeholder="Mínimo 10 caracteres y un número" autocomplete="new-password"
+                                   aria-describedby="reglasClave" required>
+                            <button type="button" class="ver-clave" data-objetivo="regPassword">Ver</button>
+                        </div>
+                        <!-- Cada regla se marca en verde cuando se cumple (js/login.js) -->
+                        <ul class="reglas-clave" id="reglasClave" aria-live="polite">
+                            <li data-regla="largo">Mínimo 10 caracteres</li>
+                            <li data-regla="numero">Al menos un número</li>
+                            <li data-regla="caracteres">Solo letras, números y ! @ # $ % &amp; * . _ - + ?</li>
+                        </ul>
+                        <small class="campo__error" id="error-regPassword"></small>
+                    </div>
+
+                    <div class="campo">
+                        <label for="regConfirmar">Confirmar contraseña</label>
+                        <input type="password" id="regConfirmar" name="confirmar" maxlength="64"
+                               placeholder="Repite la contraseña" autocomplete="new-password" required>
+                        <ul class="reglas-clave">
+                            <li data-regla="coincide">Las contraseñas coinciden</li>
+                        </ul>
+                        <small class="campo__error" id="error-regConfirmar"></small>
+                    </div>
+
+                    <button type="submit" class="boton boton--primario boton--bloque" id="btnRegistro">Registrarme</button>
+                </form>
+
+                <div class="separador"><span>o</span></div>
+
+                <button type="button" class="boton boton--invitado boton--bloque" id="btnInvitado">
+                    Entrar como invitado
+                </button>
+                <p class="login__pie">Como invitado puedes ver los vehículos nuevos y usados sin registrarte.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

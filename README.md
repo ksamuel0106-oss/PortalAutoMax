@@ -1,76 +1,95 @@
-# AutoMax – Portal de Vehículos con PostgreSQL
+# AutoMax - Portal de Vehículos con login y roles
 
-Versión 2 del portal de la agencia AutoMax. El formulario y el diseño son los mismos de la versión con LocalStorage; ahora los datos se guardan en una base de datos **PostgreSQL** a través de un servidor **Node.js + Express**.
+Portal web de AutoMax, agencia ficticia de vehículos nuevos y usados en La Vega, República Dominicana. Incluye inicio de sesión, registro de usuarios, acceso como invitado, roles y gestión completa de vehículos (CRUD) con fotos.
 
-## Arquitectura
-
-```
-Navegador (HTML/CSS/JS)  --fetch JSON-->  Servidor Node.js (Express)  --pg-->  PostgreSQL
-     public/js/app.js                      server.js + src/                   automax_db.vehiculos
-```
+Tecnologías: HTML5, CSS3, JavaScript, Node.js, Express, PostgreSQL, librería `pg`, `cors`, `express-session` y `multer`.
 
 ## Estructura del proyecto
 
 ```
 AgenciaVehiculos/
-├── public/                     Frontend, una página por módulo
-│   ├── index.html              Inicio: portada, combustibles, resumen, recientes, servicios
-│   ├── inventario.html         Consulta en tarjetas, búsqueda, filtro y eliminación
-│   ├── registrar.html          Formulario de registro y edición (?editar=CODIGO)
-│   ├── contacto.html           Datos de contacto y QR de WhatsApp
-│   ├── css/estilos.css
-│   ├── js/comun.js             API, avisos, menú y tarjeta de vehículo
-│   ├── js/inicio.js
-│   ├── js/inventario.js
-│   ├── js/registrar.js
-│   └── img/                    marca/, portada/, banners/, vehiculos/
-├── src/
-│   ├── db.js                   Conexión a PostgreSQL (Pool de "pg")
-│   ├── validaciones.js         Validaciones del lado del servidor
-│   └── rutas/vehiculos.js      API REST: SELECT, INSERT, UPDATE, DELETE y subida de fotos (multer)
+├── backend/
+│   ├── server.js                      Punto de entrada del servidor
+│   ├── config/
+│   │   ├── db.js                      Conexión a PostgreSQL (Pool de "pg")
+│   │   └── sesion.js                  Sesiones en el servidor (express-session)
+│   ├── controladores/
+│   │   ├── usuariosControlador.js     Registro, login, invitado, sesión y logout
+│   │   └── vehiculosControlador.js    CRUD de vehículos
+│   ├── modelos/
+│   │   ├── usuarioModelo.js           Validación, cifrado scrypt y consultas de usuarios
+│   │   └── vehiculoModelo.js          Validación y consultas de vehículos
+│   ├── rutas/
+│   │   ├── usuarios.js                /api/usuarios
+│   │   └── vehiculos.js               /api/vehiculos
+│   └── middleware/
+│       ├── autenticacion.js           requiereSesion y requiereAdmin
+│       ├── subidaFoto.js              Subida de fotos con multer
+│       └── errores.js                 Rutas inexistentes y errores
+├── frontend/
+│   ├── login.html                     Inicio de sesión, registro e invitado (página de inicio)
+│   ├── index.html                     Inicio del portal
+│   ├── inventario.html                Vehículos nuevos, usados y (admin) todos
+│   ├── registrar.html                 Registro y edición de vehículos (solo admin)
+│   ├── nosotros.html
+│   ├── sucursales.html
+│   ├── contacto.html
+│   ├── css/                           estilos.css y login.css
+│   ├── js/                            sesion.js, comun.js y un archivo por página
+│   └── img/                           marca, portada, banners, login, nosotros, sucursales, vehiculos
 ├── database/
-│   ├── 01_crear_base_datos.sql
-│   ├── 02_crear_tablas.sql     Tabla con id autoincrementable y codigo único
-│   ├── 03_pruebas.sql          Pruebas de inserción y consulta
-│   ├── 04_datos_vehiculos.sql  15 vehículos de ejemplo
-│   └── 05_agregar_foto.sql     Agrega la columna foto a una tabla existente
-├── server.js                   Punto de entrada del servidor
+│   ├── 01_crear_base_datos.sql        Crea automax_db
+│   ├── 02_crear_tablas.sql            Instalación nueva: vehiculos y usuarios (borra lo que haya)
+│   ├── 03_datos_vehiculos.sql         10 vehículos nuevos y 5 usados de ejemplo
+│   ├── 04_actualizar_base_existente.sql  Agrega columnas, roles y administrador sin borrar datos
+│   └── 05_pruebas.sql                 Pruebas de inserción y consulta (opcional)
 ├── package.json
-└── .env.example                Plantilla de la configuración de conexión
+└── .env.example
 ```
 
-### Fotos de los vehículos
+## Roles
 
-La foto es opcional y se sube desde el formulario de Registrar, con el botón "Elegir archivo" o arrastrándola desde la computadora. Acepta JPG, PNG o WebP de hasta 5 MB; el navegador la reduce a un máximo de 1200 × 900 px antes de enviarla.
+| Acción | Administrador | Usuario registrado | Invitado |
+|---|:---:|:---:|:---:|
+| Ver vehículos nuevos y usados | Sí | Sí | Sí |
+| Ver el inventario completo ("Todos") y el resumen | Sí | No | No |
+| Registrar, editar y eliminar vehículos | Sí | No | No |
 
-- El archivo se guarda en `public/img/vehiculos/` y la columna `foto` de la tabla guarda su nombre.
-- Al editar se puede cambiar o quitar la foto. Al eliminar un vehículo, también se borra su foto.
-- Las fotos subidas no se suben a GitHub (están en `.gitignore`), igual que los datos de cada base.
-- La API usa la librería `multer` para recibir el archivo (`multipart/form-data`, campo `foto`). POST y PUT siguen aceptando JSON sin foto.
+- Los usuarios que se registran desde el portal reciben el rol **usuario**.
+- El **administrador** se crea con los scripts `02` o `04`:
+  - Correo: `ventas@automaxlavega.com`
+  - Contraseña: `12345`
+  - Es una contraseña de aula. Si el portal se usa fuera de clase, cámbiela.
+- El **invitado** no se guarda en la base de datos: solo abre una sesión de consulta.
+- El permiso se revisa **en el servidor**: POST, PUT y DELETE de `/api/vehiculos` responden `401` sin sesión y `403` si el rol no es administrador.
+- Con sesión de administrador, la barra superior se vuelve roja y muestra "Modo administrador".
 
-**Si su tabla ya existía sin la columna `foto`**, ejecute `database/05_agregar_foto.sql` sobre `automax_db`. No borra datos.
+Para convertir un usuario en administrador:
 
-## Requisitos
-
-- [Node.js](https://nodejs.org) 18 o superior
-- [PostgreSQL](https://www.postgresql.org/download/) 13 o superior (incluye pgAdmin)
-
-## Instalación paso a paso
-
-**1. Crear la base de datos.** En pgAdmin abra el *Query Tool* sobre la base `postgres` y ejecute `database/01_crear_base_datos.sql`.
-O desde la terminal:
-
-```bash
-psql -U postgres -f database/01_crear_base_datos.sql
+```sql
+UPDATE usuarios SET rol = 'admin' WHERE correo = 'correo@ejemplo.com';
 ```
 
-**2. Crear la tabla.** Abra el *Query Tool* sobre la base `automax_db` y ejecute `database/02_crear_tablas.sql`.
+## Contraseñas
 
-```bash
-psql -U postgres -d automax_db -f database/02_crear_tablas.sql
-```
+Al registrarse, la contraseña debe tener:
 
-**3. Configurar la conexión.** Copie `.env.example` con el nombre `.env` y escriba la contraseña de su usuario de PostgreSQL:
+- mínimo 10 caracteres (máximo 64);
+- al menos un número;
+- solo letras, números y estos símbolos: `! @ # $ % & * . _ - + ?`
+
+Cada regla se marca en verde en el formulario cuando se cumple. La contraseña se guarda cifrada con `scrypt` (módulo `crypto` de Node.js) y una sal aleatoria, con la forma `scrypt$sal$hash`.
+
+## Instalación
+
+**Requisitos:** Node.js 18 o superior y PostgreSQL 13 o superior (incluye pgAdmin).
+
+**1. Base de datos**
+
+- **Instalación nueva:** en pgAdmin, sobre la base `postgres`, ejecute `01_crear_base_datos.sql`. Luego, sobre `automax_db`, ejecute `02_crear_tablas.sql` y, si quiere datos de ejemplo, `03_datos_vehiculos.sql`.
+- **Base que ya tiene vehículos:** no ejecute el `02`. Ejecute `04_actualizar_base_existente.sql` sobre `automax_db`. Agrega `transmision`, `condicion`, `kilometraje`, `foto`, la tabla `usuarios` con roles y el administrador, sin borrar datos. Si además ejecuta el `03`, los 15 vehículos de ejemplo reciben transmisión, condición y kilometraje (5 pasan a usados); sus fotos se conservan.
+
+**2. Archivo `.env`.** Copie `.env.example` con el nombre `.env` y complete sus datos:
 
 ```
 DB_HOST=localhost
@@ -79,71 +98,78 @@ DB_NAME=automax_db
 DB_USER=postgres
 DB_PASSWORD=su_contraseña
 PORT=3000
+SESSION_SECRET=un-texto-largo-cualquiera
 ```
 
-**4. Instalar dependencias** (desde la carpeta `AgenciaVehiculos`):
+**3. Dependencias e inicio** (desde la carpeta del proyecto):
 
 ```bash
 npm install
-```
-
-**5. Iniciar el servidor:**
-
-```bash
 npm start
 ```
 
-Si todo está bien, la terminal muestra:
+La terminal debe mostrar:
 
 ```
 Conectado a PostgreSQL, base de datos "automax_db".
 AutoMax disponible en http://localhost:3000
 ```
 
-**6. Abrir** <http://localhost:3000> en el navegador.
-
-> Importante: ya no se abre `index.html` con doble clic. La página debe abrirse desde `http://localhost:3000` para que pueda comunicarse con el servidor.
+**4. Abrir** <http://localhost:3000>. Se abre la pantalla de inicio de sesión.
 
 ## API REST
 
-| Método | Ruta                       | Operación SQL | Descripción                     |
-|--------|----------------------------|---------------|---------------------------------|
-| GET    | `/api/vehiculos`           | SELECT        | Consulta todos los vehículos    |
-| GET    | `/api/vehiculos/:codigo`   | SELECT        | Consulta un vehículo            |
-| POST   | `/api/vehiculos`           | INSERT        | Registra un vehículo            |
-| PUT    | `/api/vehiculos/:codigo`   | UPDATE        | Modifica un vehículo            |
-| DELETE | `/api/vehiculos/:codigo`   | DELETE        | Elimina un vehículo             |
+| Método | Ruta | Permiso | Descripción |
+|---|---|---|---|
+| POST | `/api/usuarios/registro` | Público | Registra un usuario (rol "usuario") |
+| POST | `/api/usuarios/login` | Público | Verifica correo y contraseña y abre la sesión |
+| POST | `/api/usuarios/invitado` | Público | Abre una sesión de invitado |
+| GET | `/api/usuarios/sesion` | Con sesión | Devuelve el usuario y su rol |
+| POST | `/api/usuarios/logout` | Con sesión | Cierra la sesión |
+| GET | `/api/vehiculos` | Público | Consulta todos los vehículos |
+| GET | `/api/vehiculos/:codigo` | Público | Consulta un vehículo |
+| POST | `/api/vehiculos` | Admin | Registra un vehículo (JSON o con foto) |
+| PUT | `/api/vehiculos/:codigo` | Admin | Modifica un vehículo |
+| DELETE | `/api/vehiculos/:codigo` | Admin | Elimina un vehículo y su foto |
 
 Todas las consultas usan parámetros (`$1, $2, ...`), lo que evita la inyección SQL.
 
-## Validaciones (en tres niveles)
+**Probar con Postman:** primero haga `POST /api/usuarios/login` con el correo y la contraseña del administrador. Postman guarda la cookie de sesión y la envía en las peticiones siguientes. Sin ese paso, POST, PUT y DELETE responden `401`.
 
-| Regla                         | Formulario (JS) | Servidor (Node) | Base de datos              |
-|-------------------------------|:---------------:|:---------------:|----------------------------|
-| Campos obligatorios           | ✔               | ✔               | `NOT NULL`                 |
-| Precio mayor que cero         | ✔               | ✔               | `CHECK (precio > 0)`       |
-| Año válido                    | ✔               | ✔               | `CHECK (anio BETWEEN ...)` |
-| Cantidad numérica             | ✔               | ✔               | `INTEGER`, `CHECK (>= 0)`  |
-| Código no repetido            | ✔               | ✔               | `PRIMARY KEY`              |
+Ejemplo de cuerpo JSON para registrar un usado:
 
-## Pruebas de inserción y consulta
+```json
+{
+  "codigo": "VH-020",
+  "marca": "Honda",
+  "modelo": "Fit",
+  "anio": 2018,
+  "color": "Gris",
+  "combustible": "Gasolina",
+  "transmision": "CVT",
+  "condicion": "Usado",
+  "kilometraje": 91000,
+  "precio": 650000,
+  "cantidad": 1,
+  "descripcion": "Hatchback usado de un solo dueño."
+}
+```
 
-1. **Desde el portal:** registre un vehículo en el formulario y compruebe que aparece en la tabla. Cierre el navegador, vuelva a abrir `http://localhost:3000` y los datos siguen ahí porque se consultan en PostgreSQL.
-2. **Desde PostgreSQL:** verifique que el registro llegó a la base de datos:
+Valores aceptados: `combustible` Gasolina, Diésel, Híbrido, Eléctrico o GLP; `transmision` Automática, Manual, CVT o Doble embrague; `condicion` Nuevo o Usado. Un vehículo nuevo se guarda siempre con 0 km.
 
-   ```sql
-   SELECT * FROM vehiculos ORDER BY fecha_registro;
-   ```
+## Fotos de los vehículos
 
-3. **Script de pruebas:** ejecute `database/03_pruebas.sql` para insertar datos de ejemplo, hacer consultas y comprobar que las restricciones rechazan datos inválidos. Los vehículos insertados por SQL aparecen en el portal al recargar la página.
+La foto es opcional y se sube desde Registro de vehículos, con "Elegir archivo" o arrastrándola desde la computadora. Acepta JPG, PNG o WebP de hasta 5 MB; el navegador la reduce a un máximo de 1200 × 900 px antes de enviarla. Se guarda en `frontend/img/vehiculos/` y la columna `foto` guarda su nombre. Las fotos subidas no van a GitHub (están en `.gitignore`).
 
 ## Problemas comunes
 
-| Mensaje                                         | Solución                                                         |
-|-------------------------------------------------|------------------------------------------------------------------|
-| `password authentication failed`                | Revise `DB_USER` y `DB_PASSWORD` en el archivo `.env`.           |
-| `database "automax_db" does not exist`          | Ejecute `database/01_crear_base_datos.sql`.                      |
-| `La tabla "vehiculos" no existe`                | Ejecute `database/02_crear_tablas.sql` sobre `automax_db`.       |
-| `ECONNREFUSED`                                  | Inicie el servicio de PostgreSQL (Windows: *Servicios* → postgresql). |
-| `EADDRINUSE: address already in use :::3000`   | Cambie `PORT` en `.env` (ej.: 3001).                             |
-| La tabla dice *"No se pudo conectar con el servidor"* | Ejecute `npm start` y abra la página desde `http://localhost:3000`. |
+| Mensaje | Solución |
+|---|---|
+| `password authentication failed` | Revise `DB_USER` y `DB_PASSWORD` en `.env`. |
+| `database "automax_db" does not exist` | Ejecute `database/01_crear_base_datos.sql`. |
+| `La tabla "vehiculos" no existe` | Ejecute `database/02_crear_tablas.sql` sobre `automax_db`. |
+| `le falta la columna ...` o `la tabla "usuarios"` | Ejecute `database/04_actualizar_base_existente.sql` (no borra datos). |
+| `Aviso: falta SESSION_SECRET` | Agregue `SESSION_SECRET` al `.env`. |
+| `ECONNREFUSED` | Inicie el servicio de PostgreSQL (Windows: Servicios, postgresql). |
+| `EADDRINUSE: address already in use :::3000` | Cambie `PORT` en `.env` (ej.: 3001). |
+| `Cannot find module 'express-session'` | Ejecute `npm install`. |

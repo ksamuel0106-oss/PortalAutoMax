@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Historia, misión, visión y valores de AutoMax, agencia de vehículos en La Vega.">
+    <title>Nosotros | AutoMax</title>
+    <link rel="icon" href="img/marca/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/estilos.css">
+    <!-- Revisa la sesión en el servidor: sin sesión vuelve al login; aplica el rol (admin, usuario o invitado) -->
+    <script src="js/sesion.js"></script>
+</head>
+<body>
+
+    <!-- ===================== ENCABEZADO Y MENÚ ===================== -->
+    <header class="encabezado" id="encabezado">
+        <!-- Barra de bienvenida: js/sesion.js escribe el nombre y el rol -->
+        <div class="barra-sesion" id="barraSesion">
+            <div class="contenedor barra-sesion__contenido">
+                <p class="barra-sesion__saludo">Bienvenido, <strong id="saludoNombre"></strong>
+                    <span class="chip-rol" id="chipRol"></span></p>
+                <p class="barra-sesion__modo solo-admin">Modo administrador: puedes registrar, editar y eliminar vehículos</p>
+                <button type="button" class="barra-sesion__salir" id="btnSalir">Cerrar sesión</button>
+            </div>
+        </div>
+
+        <div class="contenedor encabezado__contenido">
+            <a href="index.html" class="marca" aria-label="AutoMax, ir al inicio">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" class="marca__logo" width="265" height="91">
+            </a>
+
+            <button type="button" class="menu-boton" id="menuBoton" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="menu" id="menu" aria-label="Menú principal">
+                <button type="button" class="menu-cerrar" id="menuCerrar">Cerrar</button>
+                <ul class="menu__lista">
+                    <li><a href="index.html" class="menu__enlace">Inicio</a></li>
+                    <!-- Usuario e invitado: vehículos nuevos y usados -->
+                    <li class="solo-no-admin"><a href="inventario.html?condicion=Nuevo" class="menu__enlace" data-condicion="Nuevo">Vehículos nuevos</a></li>
+                    <li class="solo-no-admin"><a href="inventario.html?condicion=Usado" class="menu__enlace" data-condicion="Usado">Vehículos usados</a></li>
+                    <!-- Administrador: inventario con todos, nuevos y usados -->
+                    <li class="menu__grupo solo-admin">
+                        <button type="button" class="menu__enlace menu__desplegar" id="btnInventario" aria-expanded="false" aria-controls="submenuInventario">
+                            Inventario <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <ul class="submenu" id="submenuInventario">
+                            <li><a href="inventario.html?condicion=Todos" class="submenu__enlace" data-condicion="Todos">Todos</a></li>
+                            <li><a href="inventario.html?condicion=Nuevo" class="submenu__enlace" data-condicion="Nuevo">Vehículos nuevos</a></li>
+                            <li><a href="inventario.html?condicion=Usado" class="submenu__enlace" data-condicion="Usado">Vehículos usados</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="nosotros.html" class="menu__enlace" aria-current="page">Nosotros</a></li>
+                    <li><a href="sucursales.html" class="menu__enlace">Sucursales</a></li>
+                    <li class="solo-admin"><a href="registrar.html" class="menu__enlace">Registro de vehículos</a></li>
+                    <li class="solo-no-admin">
+                        <button type="button" class="menu__enlace menu__bloqueado" id="btnRegistroBloqueado" title="Solo administradores">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Registro de vehículos
+                        </button>
+                    </li>
+                    <li><a href="contacto.html" class="menu__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ===================== BANNER ===================== -->
+        <section class="banner banner--nosotros">
+            <div class="contenedor banner__contenido">
+                <span class="etiqueta">AutoMax La Vega</span>
+                <h1>Nosotros</h1>
+                <p>Una agencia del Cibao que vende vehículos como le gustaría comprarlos a cualquiera: sin prisa y con la información completa.</p>
+            </div>
+        </section>
+
+        <!-- ===================== HISTORIA ===================== -->
+        <section class="seccion">
+            <div class="contenedor nosotros">
+                <img src="img/nosotros/nosotros-historia.jpg" alt="Salón de exhibición de AutoMax en La Vega" loading="lazy" width="1200" height="900"
+                     onerror="this.onerror=null; this.src='img/portada/nosotros.jpg'">
+                <div class="nosotros__texto">
+                    <span class="etiqueta">Nuestra historia</span>
+                    <h2 class="titulo-seccion">Empezamos con un solo salón en La Vega</h2>
+                    <p>AutoMax abrió sus puertas en 2012 con cinco vehículos en exhibición y un equipo de cuatro personas. La idea era sencilla: que comprar un carro en el Cibao no obligara a viajar a la capital para encontrar buen precio y buen servicio.</p>
+                    <p>Con los años llegaron el taller, el área de piezas y la sección de usados revisados. Hoy tenemos sucursales en La Vega, Santiago, Bonao y San Francisco de Macorís, y seguimos atendiendo a muchos de los primeros clientes, ahora con su segundo o tercer vehículo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== MISIÓN Y VISIÓN ===================== -->
+        <section class="seccion acciones-banda">
+            <div class="contenedor mision-vision">
+                <article class="mision-vision__bloque">
+                    <span class="etiqueta">Misión</span>
+                    <h2>Ayudarte a elegir bien</h2>
+                    <p>Ofrecer vehículos nuevos y usados confiables, con asesoría honesta sobre financiamiento, seguro y mantenimiento, para que cada cliente compre el vehículo que de verdad necesita.</p>
+                </article>
+                <article class="mision-vision__bloque">
+                    <span class="etiqueta">Visión</span>
+                    <h2>La agencia de referencia del Cibao</h2>
+                    <p>Ser la agencia que las familias y los negocios de la región recomiendan primero, por la calidad de sus vehículos y por el servicio que reciben después de la compra.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- ===================== VALORES ===================== -->
+        <section class="seccion">
+            <div class="contenedor">
+                <div class="seccion__cabecera">
+                    <div>
+                        <span class="etiqueta">Lo que nos define</span>
+                        <h2 class="titulo-seccion">Nuestros valores</h2>
+                    </div>
+                </div>
+                <div class="servicios">
+                <article class="servicio">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <h3>Transparencia</h3>
+                    <p>Precio, kilometraje e historial de cada vehículo a la vista antes de firmar.</p>
+                </article>
+                <article class="servicio">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5A5 5 0 0 1 21 20"/></svg>
+                    <h3>Trato cercano</h3>
+                    <p>Te atiende la misma persona desde la primera visita hasta la entrega de llaves.</p>
+                </article>
+                <article class="servicio">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>
+                    <h3>Respaldo después de la compra</h3>
+                    <p>Taller, piezas y garantía en la misma agencia donde compraste.</p>
+                </article>
+                <article class="servicio">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>
+                    <h3>Calidad revisada</h3>
+                    <p>Cada usado pasa una inspección mecánica antes de entrar al inventario.</p>
+                </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== LLAMADO A LA ACCIÓN ===================== -->
+        <section class="seccion" style="padding-top: 0">
+            <div class="contenedor llamado">
+                <div>
+                    <h2>¿Listo para tu próximo vehículo?</h2>
+                    <p>Visita la sucursal más cercana o escríbenos y te asesoramos sin compromiso.</p>
+                </div>
+                <div class="llamado__acciones">
+                    <a href="sucursales.html" class="boton boton--blanco">Ver sucursales</a>
+                    <a href="https://wa.me/18493431887" class="boton boton--claro" target="_blank" rel="noopener">Escríbenos</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================== PIE DE PÁGINA ===================== -->
+    <footer class="pie">
+        <div class="contenedor pie__rejilla">
+            <div class="pie__marca">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" width="265" height="91">
+                <p>Tu próximo vehículo empieza en La Vega.</p>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Navegación</h2>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="inventario.html?condicion=Nuevo">Vehículos nuevos</a></li>
+                    <li><a href="inventario.html?condicion=Usado">Vehículos usados</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="sucursales.html">Sucursales</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Contacto</h2>
+                <ul>
+                    <li><a href="tel:+18294638905">Tel. 829-463-8905</a></li>
+                    <li><a href="https://wa.me/18493431887" target="_blank" rel="noopener">WhatsApp 849-343-1887</a></li>
+                    <li>ventas@automaxlavega.com</li>
+                    <li><a href="sucursales.html">La Vega, Santiago, Bonao y San Francisco de Macorís</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Horario</h2>
+                <ul>
+                    <li>Lunes a viernes: 8:00 a. m. a 6:00 p. m.</li>
+                    <li>Sábados: 8:00 a. m. a 1:00 p. m.</li>
+                    <li>Domingos: cerrado</li>
+                </ul>
+            </div>
+        </div>
+        <div class="contenedor pie__base">
+            <p>&copy; <span id="anioActual"></span> AutoMax. Todos los derechos reservados.</p>
+            <ul class="redes" aria-label="Redes sociales">
+                <!-- Cambie href="#" por el enlace de cada cuenta cuando exista -->
+                <li><a class="red" href="#">Instagram</a></li>
+                <li><a class="red" href="#">Facebook</a></li>
+                <li><a class="red" href="#">TikTok</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Botón flotante de WhatsApp -->
+    <a class="whatsapp-flotante" href="https://wa.me/18493431887" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span>Escríbenos</span>
+    </a>
+
+    <!-- Mensajes emergentes -->
+    <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+    <script src="js/comun.js"></script>
+</body>
+</html>

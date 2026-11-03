@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vehículos nuevos y usados de AutoMax en La Vega.">
+    <title>Vehículos | AutoMax</title>
+    <link rel="icon" href="img/marca/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/estilos.css">
+    <!-- Revisa la sesión en el servidor: sin sesión vuelve al login; aplica el rol (admin, usuario o invitado) -->
+    <script src="js/sesion.js"></script>
+</head>
+<body>
+
+    <!-- ===================== ENCABEZADO Y MENÚ ===================== -->
+    <header class="encabezado" id="encabezado">
+        <!-- Barra de bienvenida: js/sesion.js escribe el nombre y el rol -->
+        <div class="barra-sesion" id="barraSesion">
+            <div class="contenedor barra-sesion__contenido">
+                <p class="barra-sesion__saludo">Bienvenido, <strong id="saludoNombre"></strong>
+                    <span class="chip-rol" id="chipRol"></span></p>
+                <p class="barra-sesion__modo solo-admin">Modo administrador: puedes registrar, editar y eliminar vehículos</p>
+                <button type="button" class="barra-sesion__salir" id="btnSalir">Cerrar sesión</button>
+            </div>
+        </div>
+
+        <div class="contenedor encabezado__contenido">
+            <a href="index.html" class="marca" aria-label="AutoMax, ir al inicio">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" class="marca__logo" width="265" height="91">
+            </a>
+
+            <button type="button" class="menu-boton" id="menuBoton" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="menu" id="menu" aria-label="Menú principal">
+                <button type="button" class="menu-cerrar" id="menuCerrar">Cerrar</button>
+                <ul class="menu__lista">
+                    <li><a href="index.html" class="menu__enlace">Inicio</a></li>
+                    <!-- Usuario e invitado: vehículos nuevos y usados -->
+                    <li class="solo-no-admin"><a href="inventario.html?condicion=Nuevo" class="menu__enlace" data-condicion="Nuevo">Vehículos nuevos</a></li>
+                    <li class="solo-no-admin"><a href="inventario.html?condicion=Usado" class="menu__enlace" data-condicion="Usado">Vehículos usados</a></li>
+                    <!-- Administrador: inventario con todos, nuevos y usados -->
+                    <li class="menu__grupo solo-admin">
+                        <button type="button" class="menu__enlace menu__desplegar" id="btnInventario" aria-expanded="false" aria-controls="submenuInventario">
+                            Inventario <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <ul class="submenu" id="submenuInventario">
+                            <li><a href="inventario.html?condicion=Todos" class="submenu__enlace" data-condicion="Todos">Todos</a></li>
+                            <li><a href="inventario.html?condicion=Nuevo" class="submenu__enlace" data-condicion="Nuevo">Vehículos nuevos</a></li>
+                            <li><a href="inventario.html?condicion=Usado" class="submenu__enlace" data-condicion="Usado">Vehículos usados</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="nosotros.html" class="menu__enlace">Nosotros</a></li>
+                    <li><a href="sucursales.html" class="menu__enlace">Sucursales</a></li>
+                    <li class="solo-admin"><a href="registrar.html" class="menu__enlace">Registro de vehículos</a></li>
+                    <li class="solo-no-admin">
+                        <button type="button" class="menu__enlace menu__bloqueado" id="btnRegistroBloqueado" title="Solo administradores">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Registro de vehículos
+                        </button>
+                    </li>
+                    <li><a href="contacto.html" class="menu__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ===================== BANNER ===================== -->
+        <section class="banner banner--nuevos" id="banner">
+            <div class="contenedor banner__contenido">
+                <span class="etiqueta">AutoMax La Vega</span>
+                <h1 id="bannerTitulo">Vehículos nuevos</h1>
+                <p id="bannerTexto">Vehículos 0 km de las principales marcas, con garantía de fábrica.</p>
+            </div>
+        </section>
+
+        <!-- ===================== CONSULTA DE VEHÍCULOS ===================== -->
+        <section class="seccion">
+            <div class="contenedor">
+                <div class="herramientas">
+                    <!-- Pestañas: Todos (solo admin), Nuevos y Usados. Se generan desde js/inventario.js -->
+                    <div class="pestanas-condicion" id="pestanasCondicion" role="tablist" aria-label="Condición del vehículo"></div>
+                    <div class="herramientas__fila">
+                        <input type="search" id="buscar" class="buscador"
+                               placeholder="Buscar por código, marca, modelo, color..." aria-label="Buscar vehículo">
+                        <a href="registrar.html" class="boton boton--primario solo-admin">Registrar vehículo</a>
+                    </div>
+                    <div class="filtros" id="filtros" aria-label="Filtrar por combustible">
+                        <!-- Los botones de filtro se generan desde js/inventario.js -->
+                    </div>
+                    <div class="herramientas__fila">
+                        <span class="contador" id="contador"></span>
+                        <span id="estadoConexion" class="estado-conexion">Conectando...</span>
+                    </div>
+                </div>
+
+                <div class="grilla-vehiculos" id="grillaVehiculos" aria-live="polite">
+                    <!-- Las tarjetas se generan desde js/inventario.js -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===================== PIE DE PÁGINA ===================== -->
+    <footer class="pie">
+        <div class="contenedor pie__rejilla">
+            <div class="pie__marca">
+                <img src="img/marca/logo-blanco.png" alt="AutoMax" width="265" height="91">
+                <p>Tu próximo vehículo empieza en La Vega.</p>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Navegación</h2>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="inventario.html?condicion=Nuevo">Vehículos nuevos</a></li>
+                    <li><a href="inventario.html?condicion=Usado">Vehículos usados</a></li>
+                    <li><a href="nosotros.html">Nosotros</a></li>
+                    <li><a href="sucursales.html">Sucursales</a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Contacto</h2>
+                <ul>
+                    <li><a href="tel:+18294638905">Tel. 829-463-8905</a></li>
+                    <li><a href="https://wa.me/18493431887" target="_blank" rel="noopener">WhatsApp 849-343-1887</a></li>
+                    <li>ventas@automaxlavega.com</li>
+                    <li><a href="sucursales.html">La Vega, Santiago, Bonao y San Francisco de Macorís</a></li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="pie__titulo">Horario</h2>
+                <ul>
+                    <li>Lunes a viernes: 8:00 a. m. a 6:00 p. m.</li>
+                    <li>Sábados: 8:00 a. m. a 1:00 p. m.</li>
+                    <li>Domingos: cerrado</li>
+                </ul>
+            </div>
+        </div>
+        <div class="contenedor pie__base">
+            <p>&copy; <span id="anioActual"></span> AutoMax. Todos los derechos reservados.</p>
+            <ul class="redes" aria-label="Redes sociales">
+                <!-- Cambie href="#" por el enlace de cada cuenta cuando exista -->
+                <li><a class="red" href="#">Instagram</a></li>
+                <li><a class="red" href="#">Facebook</a></li>
+                <li><a class="red" href="#">TikTok</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Botón flotante de WhatsApp -->
+    <a class="whatsapp-flotante" href="https://wa.me/18493431887" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span>Escríbenos</span>
+    </a>
+
+    <!-- Mensajes emergentes -->
+    <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+    <script src="js/comun.js"></script>
+    <script src="js/inventario.js"></script>
+</body>
+</html>
